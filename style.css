@@ -1,0 +1,236 @@
+body {
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('chowon.png');
+    background-size: cover;
+    color: #333;
+    line-height: 1.5;
+}
+
+body.dark-mode {
+    background-image: none;
+    background-color: #333;
+    color: #f0f0f0;
+}
+
+#game-container {
+    width: 800px;
+    height: 600px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+body.dark-mode #game-container {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: #f0f0f0;
+}
+
+#main-screen {
+    flex-grow: 1;
+    position: relative;
+}
+
+.view {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.active-view {
+    display: block;
+}
+
+#info-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+body.dark-mode #info-bar {
+    border-top-color: #f0f0f0;
+}
+
+#controls {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+body.dark-mode #controls {
+    border-top-color: #f0f0f0;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+#farm-plots, #seed-shop, #upgrade-shop, #inventory-items, #pet-shop, #sell-crops, #hoe-shop {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.plot, .seed-item, .upgrade-item, .inventory-item {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    background-color: rgba(255, 255, 255, 0.9);
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.plot p, .seed-item p, .upgrade-item p, .inventory-item p {
+    margin: 0;
+}
+
+body.dark-mode .plot, body.dark-mode .seed-item, body.dark-mode .upgrade-item, body.dark-mode .inventory-item {
+    background-color: rgba(50, 50, 50, 0.9);
+    border-color: #f0f0f0;
+}
+
+.plot img, .seed-item img, .inventory-item img {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.upgrade-item img {
+    max-width: 50%;
+    max-height: 50%;
+}
+
+.inline-img {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+}
+
+#message-log {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    height: 50px;
+    overflow-y: scroll;
+}
+
+body.dark-mode #message-log {
+    border-top-color: #f0f0f0;
+}
+
+.shop-page {
+    display: none;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.modal {
+    display: block; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+body.dark-mode .modal-content {
+    background-color: #333;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+body.dark-mode .close {
+    color: #f0f0f0;
+}
+
+.modal-content button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.modal-content button img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.plant-modal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.plant-modal-item img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    #game-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+}
+
+#game-clear-screen {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    color: black;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}

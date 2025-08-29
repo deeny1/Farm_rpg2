@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>농장 RPG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="main-screen">
+            <div id="farm-view" class="view active-view">
+                <h2>농장</h2>
+                <div id="farm-plots"></div>
+            </div>
+            <div id="shop-view" class="view">
+                <h2>상점</h2>
+                <div id="shop-nav">
+                    <button id="seed-shop-btn">씨앗</button>
+                    <button id="upgrade-shop-btn">강화</button>
+                    <button id="pet-shop-btn">펫</button>
+                    <button id="sell-crops-btn">판매</button>
+                    <button id="hoe-shop-btn">호미</button>
+                </div>
+                <div id="seed-shop" class="shop-page"></div>
+                <div id="upgrade-shop" class="shop-page"></div>
+                <div id="pet-shop" class="shop-page"></div>
+                <div id="sell-crops" class="shop-page"></div>
+                <div id="hoe-shop" class="shop-page"></div>
+            </div>
+            <div id="inventory-view" class="view">
+                <h2>인벤토리</h2>
+                <div id="inventory-items"></div>
+            </div>
+        </div>
+        <div id="info-bar">
+            <p>돈: <span id="money">0</span>원</p>
+            <p>현재 호미: <span id="current-hoe"></span></p>
+        </div>
+        <div id="controls">
+            <button id="farm-btn">농장</button>
+            <button id="shop-btn">상점</button>
+            <button id="inventory-btn">인벤토리</button>
+            <button id="dark-mode-btn">다크모드</button>
+            <button id="reset-btn">게임초기화</button>
+        </div>
+        <div id="message-log"></div>
+    </div>
+    <div id="game-clear-screen">
+        <h1>게임 클리어!</h1>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
