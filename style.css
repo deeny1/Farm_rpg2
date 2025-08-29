@@ -234,3 +234,8 @@ body.dark-mode .close {
     justify-content: center;
     align-items: center;
 }
+
+.plot.big-plant {
+    transform: scale(1.2);
+    border: 2px solid gold;
+}

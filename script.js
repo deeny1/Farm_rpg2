@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '당근': 3
     };
     let pets = [];
-    let farmPlots = Array(12).fill({ crop: null, time: 0 });
+    let farmPlots = Array(12).fill({ crop: null, time: 0, isBig: false });
     let gameInterval;
 
     // DOM Elements
@@ -39,32 +39,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Game Data
     const hoes = {
-        '녹슨호미': { cost: 50, upgradeChance: 0.7, next: '보통호미', bigChance: 0.02, image: 'rusty_hoe.png' },
-        '보통호미': { cost: 1000, upgradeChance: 0.45, next: '철호미', bigChance: 0.3, image: 'common_hoe.png' },
-        '철호미': { cost: 50000, upgradeChance: 0.01, next: '금호미', bigChance: 0.5, image: 'iron_hoe.png' },
-        '금호미': { cost: 9999999, upgradeChance: 0, next: null, bigChance: 0.7, image: 'gold_hoe.png' }
+        '녹슨호미': { cost: 50, upgradeChance: 0.7, next: '보통호미', bigChance: 0.02, image: 'hoe/rusty_hoe.png' },
+        '보통호미': { cost: 1000, upgradeChance: 0.45, next: '철호미', bigChance: 0.3, image: 'hoe/common_hoe.png' },
+        '철호미': { cost: 50000, upgradeChance: 0.01, next: '금호미', bigChance: 0.5, image: 'hoe/iron_hoe.png' },
+        '금호미': { cost: 9999999, upgradeChance: 0, next: null, bigChance: 0.7, image: 'hoe/gold_hoe.png' }
     };
 
     const seeds = {
-        '당근': { cost: 1000, time: 10, image: 'dangeun.png' },
-        '오이': { cost: 2500, time: 30, image: 'oi.png' },
-        '상추': { cost: 5000, time: 60, image: 'sangchu.png' },
-        '토마토': { cost: 7500, time: 120, image: 'tomato.png' },
-        '감자': { cost: 10000, time: 300, image: 'gamja.png' },
-        '배추': { cost: 12000, time: 420, image: 'baechu.png' },
-        '바나나': { cost: 150000, time: 3600, locked: true, image: 'banana.png' }
+        '당근': { cost: 1000, time: 10, image: 'seed/dangeun.png' },
+        '오이': { cost: 2500, time: 30, image: 'seed/oi.png' },
+        '상추': { cost: 5000, time: 60, image: 'seed/sangchu.png' },
+        '토마토': { cost: 7500, time: 120, image: 'seed/tomato.png' },
+        '감자': { cost: 10000, time: 300, image: 'seed/gamja.png' },
+        '배추': { cost: 12000, time: 420, image: 'seed/baechu.png' },
+        '바나나': { cost: 15000, time: 3600, image: 'seed/banana.png' },
+        '코코넛': { cost: 20000, time: 1800, image: 'seed/coconut.png' },
+        '두리안': { cost: 40000, time: 3600, image: 'seed/durian.png' },
+        '레몬': { cost: 60000, time: 7200, image: 'seed/lemon.png' },
+        '다이아몬드': { cost: 100000, time: 14400, image: 'seed/diamond.png' },
+        '자수정': { cost: 200000, time: 28800, image: 'seed/Gasujung.png' },
+        '에그': { cost: 5000, time: 3600, image: 'pet/egg.png', isEgg: true }
     };
 
     const petData = {
-        '소': { cost: 5000, bigChanceBonus: 0.1, image: 'cow.png' },
-        '닭': { cost: 5000, bigChanceBonus: 0.1, image: 'chicken.png' },
-        '돼지': { cost: 5000, bigChanceBonus: 0.1, image: 'pig.png' }
+        '치킨': { cost: 5000, bigChanceBonus: 0.05, image: 'pet/chicken.png' },
+        '소': { cost: 5000, bigChanceBonus: 0.05, image: 'pet/cow.png' },
+        '돼지': { cost: 5000, bigChanceBonus: 0.05, image: 'pet/pig.png' },
+        '족제비': { cost: 20000, bigChanceBonus: 0.1, image: 'pet/gogebi.png' },
+        '독수리': { cost: 40000, bigChanceBonus: 0.2, image: 'pet/eagle.png' },
+        '드래곤': { cost: 100000, bigChanceBonus: 0.4, image: 'pet/dragon.png' }
     };
 
     const hoeOrder = ['녹슨호미', '보통호미', '철호미', '금호미'];
 
     // --- Main Game Loop ---
-    
+    function getPetBigChance() {
+        return pets.reduce((total, pet) => total + (petData[pet] ? petData[pet].bigChanceBonus : 0), 0);
+    }
 
     function saveGame() {
         const gameState = {
@@ -78,6 +89,26 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('farmRpgState', JSON.stringify(gameState));
     }
 
+    function hatchEgg(isOffline = false) {
+        const rand = Math.random();
+        let newPet;
+        if (rand < 0.005) {
+            newPet = '드래곤';
+        } else if (rand < 0.105) {
+            newPet = '독수리';
+        } else if (rand < 0.255) {
+            newPet = '족제비';
+        } else {
+            const basicPets = ['소', '치킨', '돼지'];
+            newPet = basicPets[Math.floor(Math.random() * basicPets.length)];
+        }
+        pets.push(newPet);
+        logMessage(`알에서 ${newPet}이(가) 부화했습니다!`);
+        if (!isOffline) {
+            updateDisplay();
+        }
+    }
+
     function loadGame() {
         const savedState = localStorage.getItem('farmRpgState');
         if (savedState) {
@@ -87,20 +118,24 @@ document.addEventListener('DOMContentLoaded', () => {
             money = gameState.money;
             currentHoe = gameState.currentHoe;
             inventory = gameState.inventory; // inventory is global
-            pets = gameState.pets;
+            pets = gameState.pets || [];
 
             const newFarmPlots = gameState.farmPlots.map(plot => {
                 if (plot.crop) {
                     const timeRemaining = plot.time - timeDiff;
                     if (timeRemaining <= 0) {
+                        if (seeds[plot.crop].isEgg) {
+                            hatchEgg(true);
+                            return { crop: null, time: 0, isBig: false };
+                        }
                         // Crop is ready for harvest.
                         const timeOverdue = -timeRemaining;
                         const numHarvests = Math.floor(timeOverdue / seeds[plot.crop].time) + 1;
 
                         // Add to inventory
-                        let bigChance = hoes[currentHoe].bigChance + (pets.length * 0.1);
                         let harvestedAmount = 0;
                         for (let i = 0; i < numHarvests; i++) {
+                            let bigChance = hoes[currentHoe].bigChance + getPetBigChance();
                             let isBig = Math.random() < bigChance;
                             harvestedAmount += (isBig ? 2 : 1);
                         }
@@ -113,10 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                         // Return an empty plot
-                        return { crop: null, time: 0 };
+                        return { crop: null, time: 0, isBig: false };
                     } else {
                         // Crop still growing
-                        return { crop: plot.crop, time: timeRemaining };
+                        return { crop: plot.crop, time: timeRemaining, isBig: plot.isBig };
                     }
                 }
                 return plot; // Empty plot remains empty
@@ -139,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 '당근': 3
             };
             pets = [];
-            farmPlots = Array(12).fill({ crop: null, time: 0 });
+            farmPlots = Array(12).fill({ crop: null, time: 0, isBig: false });
             updateDisplay();
             location.reload();
         }
@@ -195,6 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
         farmPlots.forEach((plot, index) => {
             const plotEl = document.createElement('div');
             plotEl.classList.add('plot');
+            if (plot.isBig) {
+                plotEl.classList.add('big-plant');
+            }
             if (plot.crop) {
                 plotEl.innerHTML = `<img src="${seeds[plot.crop].image}" alt="${plot.crop}" /><p>${formatTime(plot.time)}</p>`;
             } else {
@@ -208,16 +246,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderShop() {
         // Seed Shop
         seedShopEl.innerHTML = '';
-        for (const seed in seeds) {
-            if (seeds[seed].locked && money < 100000) continue;
-            if (seeds[seed].locked) seeds[seed].locked = false;
+        const eggItemContainer = document.createElement('div');
+        const otherSeedsContainer = document.createElement('div');
+        otherSeedsContainer.style.maxHeight = '240px';
+        otherSeedsContainer.style.overflowY = 'auto';
+        otherSeedsContainer.style.display = 'flex';
+        otherSeedsContainer.style.flexWrap = 'wrap';
+        otherSeedsContainer.style.gap = '10px';
+        otherSeedsContainer.style.width = '100%';
 
+
+        for (const seed in seeds) {
             const seedItem = document.createElement('div');
             seedItem.classList.add('seed-item');
             seedItem.innerHTML = `<img src="${seeds[seed].image}" alt="${seed}" /><p>${seed}</p><p>가격: ${seeds[seed].cost}원</p>`;
             seedItem.onclick = () => buySeed(seed);
-            seedShopEl.appendChild(seedItem);
+
+            if (seed === '에그') {
+                eggItemContainer.appendChild(seedItem);
+            } else {
+                otherSeedsContainer.appendChild(seedItem);
+            }
         }
+        seedShopEl.appendChild(eggItemContainer);
+        seedShopEl.appendChild(otherSeedsContainer);
 
         // Upgrade Shop
         upgradeShopEl.innerHTML = '';
@@ -327,7 +379,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectButton.textContent = '선택';
                 selectButton.onclick = () => {
                     inventory[seed]--;
-                    farmPlots[index] = { crop: seed, time: seeds[seed].time };
+                    let isBig = false;
+                    if (!seeds[seed].isEgg) {
+                        let bigChance = hoes[currentHoe].bigChance + getPetBigChance();
+                        isBig = Math.random() < bigChance;
+                    }
+                    farmPlots[index] = { crop: seed, time: seeds[seed].time, isBig: isBig };
                     logMessage(`${seed}을(를) 심었습니다.`);
                     modal.remove();
                     updateDisplay();
@@ -346,23 +403,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const plot = farmPlots[index];
         if (!plot.crop) return;
 
-        let bigChance = hoes[currentHoe].bigChance + (pets.length * 0.1);
-        let isBig = Math.random() < bigChance;
-
-        if (isAuto) {
-            inventory[plot.crop] = (inventory[plot.crop] || 0) + (isBig ? 2 : 1);
-            if(!isOffline) logMessage(`${plot.crop}을(를) 자동으로 수확했습니다.` + (isBig ? ' (BIG!)' : ''));
-        } else { // Manual harvest logic (if you want to re-introduce it)
-            let sellPrice = seeds[plot.crop].cost * 0.9;
-            if (isBig) {
-                sellPrice *= 2; // BIG 효과!
-                logMessage(`BIG 효과! ${plot.crop} 판매가가 2배 증가했습니다!`);
-            }
-            money += sellPrice;
-            logMessage(`${plot.crop}을(를) 수확하여 ${sellPrice.toFixed(0)}원을 얻었습니다.`);
+        if (seeds[plot.crop].isEgg) {
+            hatchEgg(isOffline);
+            farmPlots[index] = { crop: null, time: 0, isBig: false };
+            if(!isOffline) updateDisplay();
+            return;
         }
 
-        farmPlots[index] = { crop: null, time: 0 };
+        let harvestedAmount = plot.isBig ? 2 : 1;
+
+        if (isAuto) {
+            inventory[plot.crop] = (inventory[plot.crop] || 0) + harvestedAmount;
+            if(!isOffline) logMessage(`${plot.crop}을(를) 자동으로 수확했습니다.` + (plot.isBig ? ' (BIG!)' : ''));
+        } else { // Manual harvest logic (if you want to re-introduce it)
+            let sellPrice = seeds[plot.crop].cost * 0.9 * harvestedAmount;
+            logMessage(`${plot.crop}을(를) 수확하여 ${sellPrice.toFixed(0)}원을 얻었습니다.` + (plot.isBig ? ' (BIG!)' : ''));
+            money += sellPrice;
+        }
+
+        farmPlots[index] = { crop: null, time: 0, isBig: false };
 
         if (plot.crop === '바나나') {
             logMessage('축하합니다! 마지막 농작물인 바나나를 수확했습니다! 게임 클리어!');
@@ -406,6 +465,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function buyPet(pet) {
         if (money >= petData[pet].cost) {
+            if (pets.includes(pet)) {
+                logMessage('이미 가지고 있는 펫입니다.');
+                return;
+            }
             money -= petData[pet].cost;
             pets.push(pet);
             logMessage(`${pet}을(를) 구매했습니다.`);
@@ -418,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function sellCrop(crop) {
         if (inventory[crop] > 0) {
             let sellPrice = seeds[crop].cost * 1.2;
-            let bigChance = hoes[currentHoe].bigChance + (pets.length * 0.1);
+            let bigChance = hoes[currentHoe].bigChance + getPetBigChance();
             if (Math.random() < bigChance) {
                 sellPrice *= 2;
                 logMessage('BIG 효과! 판매가가 2배가 되었습니다.');
