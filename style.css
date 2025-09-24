@@ -102,6 +102,7 @@ button {
 
 .plot p, .seed-item p, .upgrade-item p, .inventory-item p {
     margin: 0;
+    font-size: 12px; /* 글씨 크기 줄임 */
 }
 
 body.dark-mode .plot, body.dark-mode .seed-item, body.dark-mode .upgrade-item, body.dark-mode .inventory-item {
@@ -111,7 +112,7 @@ body.dark-mode .plot, body.dark-mode .seed-item, body.dark-mode .upgrade-item, b
 
 .plot img, .seed-item img, .inventory-item img {
     max-width: 80%;
-    max-height: 80%;
+    max-height: 60%;
 }
 
 .upgrade-item img {
@@ -160,7 +161,7 @@ body.dark-mode #message-log {
     margin: 15% auto; 
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; 
+    width: 500px; 
 }
 
 body.dark-mode .modal-content {
@@ -238,4 +239,39 @@ body.dark-mode .close {
 .plot.big-plant {
     transform: scale(1.2);
     border: 2px solid gold;
+}
+
+#shop-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* New styles for sell items */
+.sell-item {
+    width: 120px; /* Reduced width */
+    height: auto; /* Auto height to fit content */
+    min-height: 120px; /* Minimum height */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px; /* Reduced padding */
+    background-color: rgba(255, 255, 255, 0.9);
+    word-break: break-all;
+    text-align: center; /* Center text */
+}
+
+.sell-item p {
+    margin: 0;
+    font-size: 12px; /* Reduced font size */
+}
+
+.sell-item img {
+    max-width: 70%; /* Slightly reduced image size */
+    max-height: 45%; /* Adjusted image height */
+    margin-bottom: 4px; /* Space between image and text */
 }
